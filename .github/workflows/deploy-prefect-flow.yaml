@@ -25,10 +25,15 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Get Commit SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Prefect Deploy
         env:
-          
           PREFECT_API_URL: ${{ secrets.PREFECT_API_URL }}
+          PREFECT_API_KEY: ${{ secrets.PREFECT_API_KEY }}
+          GIT_COMMIT_SHA: ${{ steps.vars.outputs.sha_short }}
         run: |
           pip install -r requirements.txt
-          python flow.py
+          prefect deploy --all

@@ -1,0 +1,10 @@
+# prefect.yaml
+deployments:
+- name: my-deployment
+  entrypoint: flow.py:hello
+  work_pool_name: my-work-pool
+  build:
+    - prefect.deployments.steps.build_docker_image:
+        image_name: kevingrismoreprefect/cicd-example
+        tag: "{{ env.GIT_COMMIT_SHA }}"
+        push: true
